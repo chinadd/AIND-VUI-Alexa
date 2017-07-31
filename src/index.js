@@ -86,22 +86,11 @@ var handlers = {
         var validAnswer = Year_with_fact(this.event.request.intent);
         if (validAnswer) {
           var year_selected = parseInt(this.event.request.intent.slots.FACT_YEAR.value);
-          var year_list = [];
-          year_list[1950] = 0;
-          year_list[1951] = 1
-          year_list[1956] = 2;
-          year_list[1961] = 3;
-          year_list[1963] = 4;
-          year_list[1965] = 5;
-          year_list[1967] = 6;
-          year_list[1969] = 7;
-          year_list[1972] = 8;
-          year_list[1974] = 9;
-          year_list[1979] = 10;
-          year_list[1980] = 11;        
-          year_list[1997] = 12;
-          year_list[2005] = 13;
-          year_list[2016] = 14;
+          //You could iterate the facts_array and for each i fact use the condition
+          //facts_array[i].indexOf(year) >= 0 to verify is it contain the year,
+          //if it does you could add it to another array.
+          //You can have more than 1 fact for a year, in that case, you will need to choose randomly.
+
 
           if (typeof(year_selected) === 'undefined') {
             this.emit('GetFact');//offer a random fact
@@ -109,7 +98,7 @@ var handlers = {
           else {
           var randomGetFactMessage = randomPhrase(this.t("GET_FACT_MESSAGE"));
           var response = this.t("FACTS");
-          var fact = response[year_list[year_selected]];
+          var fact = GetYearFact(year_selected, response);
 
           var speechOutput = randomPhrase(this.t("GET_FACT_MESSAGE")) + fact;
           var repromptSpeech = randomPhrase(this.t("GET_REPROMPT_MESSAGE"))
@@ -145,4 +134,14 @@ function Year_with_fact(intent) {
   var Year_slot_filled = intent && intent.slots && intent.slots.FACT_YEAR && intent.slots.FACT_YEAR.value;
   var Year_valid = Year_slot_filled && !isNaN(parseInt(intent.slots.FACT_YEAR.value));
   return Year_valid;
+}
+
+function GetYearFact(yearAsked, phraseArr) {
+  for (var i=0; i < phraseArr.length; i++) {
+        var phrase = phraseArr[i];
+        if(phrase.includes(yearAsked)){
+            return phrase;
+        }
+    }
+    return null;
 }
